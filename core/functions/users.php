@@ -4,13 +4,11 @@ function change_profile_image($user_id, $file_temp, $file_extn, $pdo) {
 	move_uploaded_file($file_temp, $file_path);
         $statement = $pdo->prepare("UPDATE users SET profile=:filepath WHERE user_id=:user_id");
         $statement->execute(array(':filepath' => $file_path, ':user_id' => $user_id));
-	#mysql_query("UPDATE `users` SET `profile` = '" . mysql_real_escape_string($file_path) . "' WHERE `user_id` = " . (int)$user_id);
 }
 
 function mail_users($subject, $body, $pdo) {
         $statement = $pdo->prepare("SELECT email, first_name FROM users WHERE allow_email =1");
         $statement->execute();
-	#$query = mysql_query("SELECT `email`, `first_name` FROM `users` WHERE `allow_email` = 1");
 	while (($row = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
 		email($row['email'], $subject, "Hello " . $row['first_name'] . ",\n\n" . $body);
 	}
@@ -23,7 +21,6 @@ function has_access($user_id, $type, $pdo) {
         $statement = $pdo->prepare("SELECT * FROM users WHERE user_id=:user_id AND type=:type");
         $statement->execute(array(':user_id' => $user_id, ':type' => $type));
         return $statement->rowCount() ? True : False;
-	#return (mysql_result(mysql_query("SELECT COUNT(`user_id`) FROM `users` WHERE `user_id` = $user_id AND `type` = $type"), 0) == 1) ? true : false;
 }
 
 function recover($mode, $email, $pdo) {
